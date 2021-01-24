@@ -48,9 +48,10 @@ public class CustomerReviewController
 		}
         List<CustomerReviewModel> reviewsRange=new ArrayList<>();
 		List<CustomerReviewModel> reviews= customerReviewService.getReviewsForProduct(product);
-
+		boolean cond1=true,cond2=true;
 		for (CustomerReviewModel review:reviews) {
-			boolean cond1=true,cond2=true;
+			cond1=true;
+			cond2=true;
             if(null!=from && review.getRating().doubleValue()<from.doubleValue()){
                cond1=false;
             }
