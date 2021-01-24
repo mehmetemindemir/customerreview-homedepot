@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -36,32 +37,49 @@ public class CustomerReviewController
 	{
 
 		final ProductModel product = productDao.findOne(productId);
-        Double from=(null!=ratingFrom?ratingFrom:null);
-        Double to=(null!=ratingTo?ratingTo:null);
+
 		if (product == null)
 		{
 			throw new ProductNotFoundException(productId);
 		}
+
+        List<CustomerReviewModel> reviewsRange=new ArrayList<>();
+		List<CustomerReviewModel> reviews= customerReviewService.getReviewsForProduct(product);
+		/*
+		Double from=(null!=ratingFrom?ratingFrom:null);
+		Double to=(null!=ratingTo?ratingTo:null);
 		if(null!=from && null!=to && from.doubleValue()>to.doubleValue()){
 			from=ratingTo.doubleValue();
 			to=ratingFrom.doubleValue();
 		}
-        List<CustomerReviewModel> reviewsRange=new ArrayList<>();
-		List<CustomerReviewModel> reviews= customerReviewService.getReviewsForProduct(product);
+
 		boolean cond1=true,cond2=true;
+
 		for (CustomerReviewModel review:reviews) {
-			cond1=true;
-			cond2=true;
-            if(null!=from && review.getRating().doubleValue()<from.doubleValue()){
-               cond1=false;
-            }
-            if(null!=to && review.getRating().doubleValue()>to.doubleValue()){
-               cond2=false;
-            }
-            if(cond1 && cond2){
-                reviewsRange.add(review);
-            }
-        }
+			cond1 = true;
+			cond2 = true;
+			if (null != from && review.getRating().doubleValue() < from.doubleValue()) {
+				cond1 = false;
+			}
+			if (null != to && review.getRating().doubleValue() > to.doubleValue()) {
+				cond2 = false;
+			}
+			if (cond1 && cond2) {
+				reviewsRange.add(review);
+			}
+
+		}*/
+		if(null!=ratingFrom && null!=ratingTo && ratingFrom.doubleValue()>-1 && ratingTo.doubleValue()>-1 ) {
+			if(ratingFrom.doubleValue()>ratingTo.doubleValue()){
+				reviewsRange = reviews.stream().filter(x -> x.getRating() > ratingTo.doubleValue() && x.getRating() < ratingFrom.doubleValue()).collect(Collectors.toList());
+			}else {
+				reviewsRange = reviews.stream().filter(x -> x.getRating() > ratingFrom.doubleValue() && x.getRating() < ratingTo.doubleValue()).collect(Collectors.toList());
+			}
+
+		}else{
+			reviewsRange=reviews;
+		}
+
         return reviewsRange;
 	}
 
