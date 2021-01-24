@@ -71,9 +71,13 @@ public class CustomerReviewController
 		}*/
 		if(null!=ratingFrom && null!=ratingTo && ratingFrom.doubleValue()>-1 && ratingTo.doubleValue()>-1 ) {
 			if(ratingFrom.doubleValue()>ratingTo.doubleValue()){
-				reviewsRange = reviews.stream().filter(x -> x.getRating() > ratingTo.doubleValue() && x.getRating() < ratingFrom.doubleValue()).collect(Collectors.toList());
+				reviewsRange = reviews.stream()
+						.filter(review -> review.getRating() > ratingTo.doubleValue() && review.getRating() < ratingFrom.doubleValue())
+						.collect(Collectors.toList());
 			}else {
-				reviewsRange = reviews.stream().filter(x -> x.getRating() > ratingFrom.doubleValue() && x.getRating() < ratingTo.doubleValue()).collect(Collectors.toList());
+				reviewsRange = reviews.stream()
+						.filter(review -> review.getRating() > ratingFrom.doubleValue() && review.getRating() < ratingTo.doubleValue())
+						.collect(Collectors.toList());
 			}
 
 		}else{
